@@ -1,7 +1,9 @@
-<head>
+ <head>
+    <style> body { margin: 0; } </style>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
 
 </head>
 <body bgcolor="#212226">
@@ -18,14 +20,109 @@
             <span style="color: rgb(191,56,29);">⬤</span>
             <span class=textWhite> — евоные</span>
         </p>
+
     </div>
-    <iframe src="./bubble.html" style="border: 0; width: 100%; height: 80%;margin-top: 7%;">
-    </iframe>
     <div id="source" class=text0>
         <span class=textWhite>Источник: Госзакупки</span>
     </div>
     <div id="star" class=text0>
         <!-- <span class=textWhite>*пары у которых больше четырёх совместных инициатив</span> -->
         <img id="logo" src="https://raw.githubusercontent.com/Schtschennikow/gdProject/main/docs/pics/Logo.svg">
+    </div>
+
+    <div id="bub" style="position: absolute; margin: 0; height: 100%;width: 100%;left: 50%; top: 50%; transform: translate(-50%, -50%);">
+        <script>
+        
+            function bc(nodes, height, width) {
+            const scale = 1.7;
+            const center = [width / 2, height / 2];
+            const rescale = isNaN(nodes[0].x);
+            
+            const svg = d3.select("#bub")
+                .append("svg")
+                .attr("viewBox", [0, 0, width, height])
+                .attr("id", "bliupped");
+        
+            const node = svg.append("g")
+                .selectAll("circle")
+                .data(nodes)
+                .join("circle")
+                .attr("r", 0)
+                .attr("fill", d => d.color);
+            
+            const simulation = d3.forceSimulation(nodes)
+                .on("tick", tick)
+                .force("collide", d3.forceCollide().radius(d => d.r))
+                .force("x", d3.forceX(center[0]).strength(0.02))
+                .force("y", d3.forceY(center[1]).strength(0.02))
+                .stop();
+            
+            setTimeout(() => {
+                simulation.restart();
+                node.transition().attr("r", d => d.r);
+            }, 50);
+        
+            if (rescale) {
+                for (const node of nodes) {
+                node.x = node.x * scale + center[0];
+                node.y = node.y * scale + center[1];
+                }
+            }
+        
+            function tick() {
+                node.attr("cx", d => d.x).attr("cy", d => d.y);
+            }
+        
+            tick();
+            };
+        
+            function getBliup(year) {
+        
+            const colors = {
+                "p": "rgb(191,56,29)",
+                "np": "rgb(0,172,229)"
+            };
+        
+            fetch('./data/pryg.json').then(res => res.json()).then(data => {
+        
+                const nodes = data[year];
+        
+                for (var i=0; i<nodes.length; i++) {
+                    let d = nodes[i]
+                    d.color = colors[d.group]
+                }
+                
+                const height = document.getElementById('bub').clientHeight/2.5;
+                const width = document.getElementById('bub').clientWidth/2.5;
+        
+                console.log(height);
+                console.log(width);
+        
+                const node = document.getElementById("bliupped");
+                if (node) {
+                node.parentNode.removeChild(node);
+                };
+        
+                bc(nodes, height, width);    
+            });
+            
+            };
+            
+            getBliup("2021");
+        
+        </script>
+    </div>
+    <div style="position: absolute; margin: 0; height: 50px;max-width: 100%;left: 50%; bottom: 0%; transform: translate(-50%, 0%);">
+        <button onclick="getBliup('2011')" class="button">2011</button>
+        <button onclick="getBliup('2012')" class="button">2012</button>
+        <button onclick="getBliup('2013')" class="button">2013</button>
+        <button onclick="getBliup('2014')" class="button">2014</button>
+        <button onclick="getBliup('2015')" class="button">2015</button>
+        <button onclick="getBliup('2016')" class="button">2016</button>
+        <button onclick="getBliup('2017')" class="button">2017</button>
+        <button onclick="getBliup('2018')" class="button">2018</button>
+        <button onclick="getBliup('2019')" class="button">2019</button>
+        <button onclick="getBliup('2020')" class="button">2020</button>
+        <button onclick="getBliup('2021')" id="b2021" class="button">2021</button>
     </div>
 </body>
