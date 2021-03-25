@@ -1,0 +1,77 @@
+#logo {
+    margin-top: 14;
+    left: 30px;
+    /* width: 11%;  */
+    height: 14px;
+    vertical-align:top;
+}
+
+#star {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    max-width: 30%;
+}
+
+#headers {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+}
+
+#header1 {
+    color: white;
+    font-size: 48px;
+    font-family: 'Roboto', sans-serif;
+    font-weight:700;
+    margin-top: 30;
+    margin-bottom: 10;
+}
+
+#header2 {
+    color: white;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight:400;
+}
+
+#info {
+    margin: 0;
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.text0 {
+    margin-top: 14;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    font-weight:400;
+}
+
+.textWhite {
+    color: white;
+}
+
+#source {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+}
+
+.button{
+    background-color:rgba(33, 34, 38, 0);
+    border: 0;
+    stroke-width: 0;
+    color: white;
+    font-size: 20px;
+    transition-duration: 0.1s;
+  }
+
+.button:focus{
+    background-color:rgba(33, 34, 38, 0);
+    color: rgb(0,172,229);
+    outline: none;
+}
