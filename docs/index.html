@@ -31,7 +31,7 @@
         <img id="logo" src="https://raw.githubusercontent.com/Schtschennikow/gdProject/main/docs/pics/Logo.svg">
     </div>
 
-    <div id="bub" style="position: absolute; margin: 0; height: 100%;width: 100%;left: 50%; top: 50%; transform: translate(-50%, -50%);">
+    <div id="bub" style="position: absolute; margin: 0; height: 50%;width: 50%;left: 50%; top: 50%; transform: translate(-50%, -50%);">
         <script>
         
             function bc(nodes, height, width) {
@@ -54,14 +54,14 @@
             const simulation = d3.forceSimulation(nodes)
                 .on("tick", tick)
                 .force("collide", d3.forceCollide().radius(d => d.r))
-                .force("x", d3.forceX(center[0]).strength(0.02))
-                .force("y", d3.forceY(center[1]).strength(0.02))
+                .force("x", d3.forceX(center[0]).strength(0.05))
+                .force("y", d3.forceY(center[1]).strength(0.05))
                 .stop();
             
             setTimeout(() => {
                 simulation.restart();
                 node.transition().attr("r", d => d.r);
-            }, 50);
+            }, 10);
         
             if (rescale) {
                 for (const node of nodes) {
@@ -93,8 +93,8 @@
                     d.color = colors[d.group]
                 }
                 
-                const height = document.getElementById('bub').clientHeight/2.5;
-                const width = document.getElementById('bub').clientWidth/2.5;
+                const height = document.getElementById('bub').clientHeight;
+                const width = document.getElementById('bub').clientWidth;
         
                 const node = document.getElementById("bliupped");
 

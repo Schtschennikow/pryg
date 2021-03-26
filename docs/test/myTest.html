@@ -1,0 +1,122 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <style> body { margin: 0; } </style> -->
+    <!-- <link rel="preconnect" href="https://fonts.gstatic.com"> -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+    <style type="text/css">
+        .animated {
+            transition-duration: 0.1s;
+        }
+    </style>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+</head>
+<body bgcolor="#212226">
+    <div class="slidecontainer">
+        <input type="range" min="2011" max="2020" step="1" value="2011" class="slider" id="myRange">
+        <p><span id="demo"></span></p>
+    </div>
+
+    <div id="bub" style="height: 100%;width: 100%;">
+        <script>
+            
+            const slider = document.getElementById("myRange");
+            const output = document.getElementById("demo");
+            // output.innerHTML = slider.value; // Display the default slider value
+
+            const height = document.getElementById('bub').clientHeight;
+            const width = document.getElementById('bub').clientWidth;
+            const center = [width / 2, height / 2];
+
+            // const data = [
+            //     {"2011":40,"2012":10,"2013":30,"label":""},
+            //     {"2011":40,"2012":40,"2013":50,"label":""},
+            //     {"2011":120,"2012":60,"2013":10,"label":""}
+            // ];
+
+
+            // console.log(data)
+
+            d3.csv("/data/cities.csv", function(d) {
+                return {
+                    city : d.city,
+                    state : d.state,
+                    population : +d.population,
+                    land_area : +d["land area"]
+                };
+                }).then(function(data) {
+                console.log(data[0]);
+                });
+
+            d3.csv("./data/data.csv", function(d) {
+                return {
+                    name: d.name,
+                    "2011" : parseFloat(d["2011"])*200+2,
+                    "2012" : parseFloat(d["2012"])*200+2,
+                    "2013" : parseFloat(d["2013"])*200+2,
+                    "2014" : parseFloat(d["2014"])*200+2,
+                    "2015" : parseFloat(d["2015"])*200+2,
+                    "2016" : parseFloat(d["2016"])*200+2,
+                    "2017" : parseFloat(d["2017"])*200+2,
+                    "2018" : parseFloat(d["2018"])*200+2,
+                    "2019" : parseFloat(d["2019"])*200+2,
+                    "2020" : parseFloat(d["2020"])*200+2
+                };
+                }).then(function(data) {
+
+                console.log(data)
+
+                const svg = d3.select("#bub")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+                var year = "2011";
+
+                const simulation = d3.forceSimulation(data)
+                    .force("x", d3.forceX(center[0]).strength(0.2))
+                    .force("y", d3.forceY(center[1]).strength(0.2))
+                    .force("collide", d3.forceCollide().radius(d => d[year]));
+
+                simulation.nodes(data)
+                    .on("tick", ticked);
+
+                function ticked() {
+                    bubbles
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y)
+                };
+
+                function simulationUpdate() {
+                    simulation
+                        .alpha(0.5)
+                        .alphaTarget(0.5)
+                        .restart();
+                };
+
+                const bubbles = svg.selectAll("circle")
+                    .data(data)
+                    .enter().append("circle")
+                    .attr("class", "animated")
+                    .attr("r", 0)
+                    .attr("fill", "#c7e9b4");
+
+                setTimeout(() => {
+                        simulationUpdate();
+                        bubbles.transition().attr("r", d => d[year]);
+                }, 1000);
+
+                slider.oninput = function() {
+                    
+                    year = this.value;
+                    bubbles.transition().attr("r", d => d[year]);
+                    simulationUpdate()
+
+                };
+            });
+        </script>
+    </div>
+</body>
